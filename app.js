@@ -5,6 +5,8 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const session = require('express-session');
 const FileStore = require('session-file-store')(session);
+const passport = require('passport');
+const authenticate = require('./authenticate');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -12,8 +14,6 @@ const campsiteRouter = require('./routes/campsiteRouter');
 const promotionRouter = require('./routes/promotionRouter');
 const partnerRouter = require('./routes/partnerRouter');
 
-const passport = require('passport');
-const authenticate = require('./authenticate');
 
 const mongoose = require('mongoose');
 const url = 'mongodb://localhost:27017/nucampsite';
@@ -46,11 +46,11 @@ app.use(session({
   store: new FileStore()
 }));
 
+app.use(passport.initialize());
+app.use(passport.session());
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
-app.use(passport.initialize());
-app.use(passport.session());
 function auth(req, res, next) {
   console.log(req.user);
 

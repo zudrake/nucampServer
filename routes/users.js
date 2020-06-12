@@ -1,7 +1,6 @@
 const express = require('express');
 const User = require('../models/user');
 const router = express.Router();
-const passportLocalMongoose = require('passport-local-mongoose');
 const passport = require('passport');
 
 /* GET users listing. */
@@ -47,13 +46,5 @@ router.get('/logout', (req, res, next) => {
   }
 });
 
-const userSchema = new Schema({
-  admin: {
-    type: Boolean,
-    default: false
-  }
-});
-
-userSchema.plugin(passportLocalMongoose);
 
 module.exports = router;
