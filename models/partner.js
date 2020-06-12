@@ -12,8 +12,7 @@ const partnerSchema = new Schema({
         required: true
     },
     featured: {
-        type: Boolean,
-        default: false
+        type: Boolean
     },
     description: {
         type: String,
@@ -21,8 +20,9 @@ const partnerSchema = new Schema({
     }
 }, {
     timestamps: true
-});
-
+})
 
 const Partner = mongoose.model('Partner', partnerSchema);
-module.exports = Partner
+
+module.exports = Partner;
+
