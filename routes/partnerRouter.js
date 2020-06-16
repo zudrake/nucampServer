@@ -1,77 +1,79 @@
-const express = require('express')
-const bodyParser = require('body-parser')
-const Partner = require('../models/partner')
-const partnersRouter = express.Router();
+const express = require('express');
+const bodyParser = require('body-parser');
+const Partner = require('../models/partner');
 const authenticate = require('../authenticate');
+const partnerRouter = express.Router();
 
-partnersRouter.use(bodyParser.json())
+partnerRouter.use(bodyParser.json());
 
-partnersRouter.route('/')
+partnerRouter.route('/')
     .get((req, res, next) => {
         Partner.find()
             .then(partners => {
                 res.statusCode = 200;
-                res.setHeader('Content-Type', 'application/json')
-                res.json(partners)
+                res.setHeader('Content-Type', 'application/json');
+                res.json(partners);
             })
-            .catch(err => next(err))
+            .catch(err => next(err));
     })
-    .post(authenticate.verifyUser, (req, res, next) => {
+    .post(authenticate.verifyUser, authenticate.verifyAdmin, (req, res) => {
         Partner.create(req.body)
             .then(partner => {
+                console.log('Partner Created ', partner);
                 res.statusCode = 200;
-                res.setHeader('Content-Type', 'application/json')
-                res.json(partner)
+                res.setHeader('Content-Type', 'application/json');
+                res.json(partner);
             })
             .catch(err => next(err));
     })
     .put(authenticate.verifyUser, (req, res) => {
         res.statusCode = 403;
-        res.end('Put operation not supported on /partners')
+        res.end('PUT operation not supported on /partners');
     })
-    .delete(authenticate.verifyUser, (req, res, next) => {
+    .delete(authenticate.verifyUser, authenticate.verifyAdmin, (req, res) => {
         Partner.deleteMany()
             .then(response => {
                 res.statusCode = 200;
-                res.setHeader('Content-Type', 'application/json')
-                res.json(response)
+                res.setHeader('Content-Type', 'application/json');
+                res.json(response);
             })
-            .catch(err => next(err))
+            .catch(err => next(err));
     });
 
-partnersRouter.route('/:partnerId')
-    .get((req, res, next) => {
+partnerRouter.route('/:partnerId')
+    .get((req, res) => {
         Partner.findById(req.params.partnerId)
             .then(partner => {
                 res.statusCode = 200;
-                res.setHeader('Content-Type', 'application/json')
-                res.json(partner)
+                res.setHeader('Content-Type', 'application/json');
+                res.json(partner);
             })
-            .catch(err => next(err))
+            .catch(err => next(err));
     })
     .post(authenticate.verifyUser, (req, res) => {
         res.statusCode = 403;
-        res.end(`POST operation not supported on /partner/${req.params.partnerId}`)
+        res.end(`POST operation not supported on /partnerId/${req.params.partnerId}`);
     })
-    .put(authenticate.verifyUser, (req, res, next) => {
+    .put(authenticate.verifyUser, authenticate.verifyAdmin, (req, res) => {
         Partner.findByIdAndUpdate(req.params.partnerId, {
             $set: req.body
         }, { new: true })
             .then(partner => {
                 res.statusCode = 200;
-                res.setHeader('Content-Type', 'application/json')
-                res.json(partner)
+                res.setHeader('Content-Type', 'application/json');
+                res.json(partner);
             })
-            .catch(err => next(err))
+            .catch(err => next(err));
     })
-    .delete(authenticate.verifyUser, (req, res, next) => {
+    .delete(authenticate.verifyUser, authenticate.verifyAdmin, (req, res) => {
         Partner.findByIdAndDelete(req.params.partnerId)
             .then(response => {
                 res.statusCode = 200;
-                res.setHeader('Content-Type', 'application/json')
-                res.json(response)
+                res.setHeader('Content-Type', 'application/json');
+                res.json(response);
             })
-            .catch(err => next(err))
+            .catch(err => next(err));
     });
 
-module.exports = partnersRouter;
+
+module.exports = partnerRouter;
