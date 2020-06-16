@@ -18,40 +18,40 @@ const commentSchema = new Schema({
     },
     author: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
+        ref:'User'
     }
 }, {
     timestamps: true
 })
 
 const campsiteSchema = new Schema({
-    name: {
+    name:{
         type: String,
         required: true,
         unique: true
     },
-    description: {
+    description:{
         type: String,
         required: true
     },
-    image: {
-        type: String,
-        required: true
+    image:{
+        type:String,
+        required:true
     },
-    elevation: {
+    elevation:{
         type: Number,
         required: true
     },
-    cost: {
+    cost:{
         type: Currency,
         required: true,
         min: 0
     },
-    featured: {
+    featured:{
         type: Boolean,
         default: false
     },
-    comments: [commentSchema]
+    comments:[commentSchema]
 }, {
     timestamps: true,
 });
